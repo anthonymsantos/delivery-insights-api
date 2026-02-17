@@ -44,7 +44,7 @@ source venv/bin/activate
 
 pip install fastapi uvicorn
 
-uvicorn main:app --reload
+uvicorn app.main:app --reload
 
 
 #### Open:
