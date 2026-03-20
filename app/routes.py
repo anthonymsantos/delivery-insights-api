@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from .db import get_db
-from .models import Delivery, DeliveryCreate
+from .models import Delivery, DeliveryCreate, DeliveryUpdate
 from .repository import DeliveryRepository
 
 router = APIRouter(prefix="/deliveries", tags=["deliveries"])
@@ -50,3 +50,16 @@ def delete_delivery(
         raise HTTPException(status_code=404, detail="Delivery not found")
 
     return {"deleted": True}
+
+@router.put("/{delivery_id}", response_model=Delivery)
+def update_delivery(
+    delivery_id: str,
+    payload: DeliveryUpdate,
+    db: Session = Depends(get_db),
+) -> Delivery:
+    updated = repo.update(db, delivery_id, payload)
+
+    if not updated:
+        raise HTTPException(status_code=404, detail="Delivery not found")
+
+    return updated

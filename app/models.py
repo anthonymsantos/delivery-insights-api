@@ -21,3 +21,7 @@ class DeliveryCreate(BaseModel):
 
 class Delivery(DeliveryCreate):
     id: str = Field(min_length=1, max_length=64)
+
+class DeliveryUpdate(BaseModel):
+    driver_name: str = Field(min_length=1, max_length=80)
+    status: DeliveryStatus

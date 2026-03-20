@@ -3,7 +3,9 @@ from typing import List, Optional
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from .models import Delivery, DeliveryCreate
+from app import db
+
+from .models import Delivery, DeliveryCreate, DeliveryUpdate
 from .orm_models import DeliveryORM
 
 
@@ -59,3 +61,26 @@ class DeliveryRepository:
         db.delete(row)
         db.commit()
         return True
+    
+    def update(
+        self,
+        db: Session,
+        delivery_id: str,
+        payload: DeliveryUpdate,
+    ) -> Optional[Delivery]:
+        row = db.get(DeliveryORM, delivery_id)
+        if row is None:
+            return None
+
+        row.driver_name = payload.driver_name
+        row.status = payload.status.value
+
+        db.commit()
+        db.refresh(row)
+
+        return Delivery(
+            id=row.id,
+            driver_name=row.driver_name,
+            status=row.status,
+            timestamp=row.timestamp,
+        )    
