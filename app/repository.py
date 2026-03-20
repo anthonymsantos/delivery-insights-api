@@ -41,8 +41,26 @@ class DeliveryRepository:
             timestamp=row.timestamp,
         )
 
-    def list(self, db: Session) -> List[Delivery]:
-        rows = db.scalars(select(DeliveryORM)).all()
+    def list(
+        self,
+        db: Session,
+        limit: int = 10,
+        offset: int = 0,
+        status: str | None = None,
+        driver_name: str | None = None,
+    ) -> list[Delivery]:
+        stmt = select(DeliveryORM)
+
+        if status:
+            stmt = stmt.where(DeliveryORM.status == status)
+
+        if driver_name:
+            stmt = stmt.where(DeliveryORM.driver_name.ilike(f"%{driver_name}%"))
+
+        stmt = stmt.offset(offset).limit(limit)
+
+        rows = db.scalars(stmt).all()
+
         return [
             Delivery(
                 id=row.id,

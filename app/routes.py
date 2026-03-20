@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from .db import get_db
@@ -21,9 +21,19 @@ def create_delivery(
 
 @router.get("", response_model=list[Delivery])
 def list_deliveries(
+    limit: int = Query(default=10, ge=1, le=100),
+    offset: int = Query(default=0, ge=0),
+    status: str | None = Query(default=None),
+    driver_name: str | None = Query(default=None),
     db: Session = Depends(get_db),
 ) -> list[Delivery]:
-    return repo.list(db)
+    return repo.list(
+        db=db,
+        limit=limit,
+        offset=offset,
+        status=status,
+        driver_name=driver_name,
+    )
 
 
 @router.get("/{delivery_id}", response_model=Delivery)
