@@ -1,7 +1,8 @@
 from pathlib import Path
+from typing import Generator
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import Session, sessionmaker
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATABASE_PATH = BASE_DIR / "delivery_insights.db"
@@ -13,3 +14,11 @@ engine = create_engine(
 )
 
 SessionLocal = sessionmaker(bind=engine)
+
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
