@@ -1,11 +1,17 @@
 from typing import List, Optional
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app import db
 
-from .models import Delivery, DeliveryCreate, DeliveryUpdate
+from .models import (
+    Delivery,
+    DeliveryCreate,
+    DeliverySortField,
+    DeliveryUpdate,
+    SortOrder,
+)
 from .orm_models import DeliveryORM
 
 
@@ -48,7 +54,9 @@ class DeliveryRepository:
         offset: int = 0,
         status: str | None = None,
         driver_name: str | None = None,
-    ) -> list[Delivery]:
+        sort_by: DeliverySortField = DeliverySortField.timestamp,
+        sort_order: SortOrder = SortOrder.desc,
+    ) -> tuple[list[Delivery], int]:
         stmt = select(DeliveryORM)
 
         if status:
@@ -57,11 +65,20 @@ class DeliveryRepository:
         if driver_name:
             stmt = stmt.where(DeliveryORM.driver_name.ilike(f"%{driver_name}%"))
 
+        count_stmt = select(func.count()).select_from(stmt.subquery())
+        total = db.scalar(count_stmt) or 0
+
+        sort_column = getattr(DeliveryORM, sort_by.value)
+        if sort_order == SortOrder.desc:
+            stmt = stmt.order_by(sort_column.desc())
+        else:
+            stmt = stmt.order_by(sort_column.asc())
+
         stmt = stmt.offset(offset).limit(limit)
 
         rows = db.scalars(stmt).all()
 
-        return [
+        items = [
             Delivery(
                 id=row.id,
                 driver_name=row.driver_name,
@@ -71,14 +88,16 @@ class DeliveryRepository:
             for row in rows
         ]
 
-    def delete(self, db: Session, delivery_id: str) -> bool:
-        row = db.get(DeliveryORM, delivery_id)
-        if row is None:
-            return False
+        return items, total
 
-        db.delete(row)
-        db.commit()
-        return True
+        def delete(self, db: Session, delivery_id: str) -> bool:
+            row = db.get(DeliveryORM, delivery_id)
+            if row is None:
+                return False
+
+            db.delete(row)
+            db.commit()
+            return True
     
     def update(
         self,

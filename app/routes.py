@@ -4,7 +4,15 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
 from .db import get_db
-from .models import Delivery, DeliveryCreate, DeliveryStatus, DeliveryUpdate
+from .models import (
+    Delivery,
+    DeliveryCreate,
+    DeliveryListResponse,
+    DeliverySortField,
+    DeliveryStatus,
+    DeliveryUpdate,
+    SortOrder,
+)
 from .repository import DeliveryRepository
 
 router = APIRouter(prefix="/deliveries", tags=["deliveries"])
@@ -19,22 +27,33 @@ def create_delivery(
     return repo.create(db, uuid4().hex, payload)
 
 
-@router.get("", response_model=list[Delivery])
+@router.get("", response_model=DeliveryListResponse)
 def list_deliveries(
     limit: int = Query(default=10, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     status: DeliveryStatus | None = Query(default=None),
     driver_name: str | None = Query(default=None),
+    sort_by: DeliverySortField = Query(default=DeliverySortField.timestamp),
+    sort_order: SortOrder = Query(default=SortOrder.desc),
     db: Session = Depends(get_db),
-) -> list[Delivery]:
+) -> DeliveryListResponse:
     driver_name = driver_name or None
 
-    return repo.list(
+    items, total = repo.list(
         db=db,
         limit=limit,
         offset=offset,
-        status=status.value if status else None,
+        status=status.value if status else None, 
         driver_name=driver_name,
+        sort_by=sort_by,
+        sort_order=sort_order,
+    )
+
+    return DeliveryListResponse(
+        items=items,
+        total=total,
+        limit=limit,
+        offset=offset,
     )
 
 
