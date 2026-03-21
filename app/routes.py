@@ -24,9 +24,11 @@ def list_deliveries(
     limit: int = Query(default=10, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
     status: DeliveryStatus | None = Query(default=None),
-    driver_name: str | None = Query(default=None, min_length=1, max_length=80),
+    driver_name: str | None = Query(default=None),
     db: Session = Depends(get_db),
 ) -> list[Delivery]:
+    driver_name = driver_name or None
+
     return repo.list(
         db=db,
         limit=limit,
