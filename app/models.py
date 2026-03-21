@@ -12,10 +12,12 @@ class DeliveryStatus(str, Enum):
     delayed = "delayed"
     canceled = "canceled"
 
+
 class DeliveryCreate(BaseModel):
     driver_name: str = Field(min_length=1, max_length=80)
     status: DeliveryStatus = DeliveryStatus.created
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+
 
 class Delivery(DeliveryCreate):
     id: str = Field(min_length=1, max_length=64)
@@ -34,6 +36,7 @@ class DeliverySortField(str, Enum):
     timestamp = "timestamp"
     driver_name = "driver_name"
     status = "status"
+
 
 class SortOrder(str, Enum):
     asc = "asc"

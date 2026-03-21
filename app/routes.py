@@ -43,7 +43,7 @@ def list_deliveries(
         db=db,
         limit=limit,
         offset=offset,
-        status=status.value if status else None, 
+        status=status.value if status else None,
         driver_name=driver_name,
         sort_by=sort_by,
         sort_order=sort_order,

@@ -12,6 +12,7 @@ from .models import (
     DeliveryUpdate,
     SortOrder,
 )
+
 from .orm_models import DeliveryORM
 
 
@@ -90,14 +91,14 @@ class DeliveryRepository:
 
         return items, total
 
-        def delete(self, db: Session, delivery_id: str) -> bool:
-            row = db.get(DeliveryORM, delivery_id)
-            if row is None:
-                return False
+    def delete(self, db: Session, delivery_id: str) -> bool:
+        row = db.get(DeliveryORM, delivery_id)
+        if row is None:
+            return False
 
-            db.delete(row)
-            db.commit()
-            return True
+        db.delete(row)
+        db.commit()
+        return True
     
     def update(
         self,
