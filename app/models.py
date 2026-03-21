@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from enum import Enum
 from pydantic import BaseModel, Field
 
@@ -16,7 +16,7 @@ class DeliveryStatus(str, Enum):
 class DeliveryCreate(BaseModel):
     driver_name: str = Field(min_length=1, max_length=80)
     status: DeliveryStatus = DeliveryStatus.created
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
 
 
 class Delivery(DeliveryCreate):
