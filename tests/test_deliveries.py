@@ -1,11 +1,4 @@
-from fastapi.testclient import TestClient
-
-from app.main import app
-
-client = TestClient(app)
-
-
-def test_create_delivery():
+def test_create_delivery(client):
     response = client.post(
         "/deliveries",
         json={
@@ -22,8 +15,7 @@ def test_create_delivery():
     assert "id" in data
 
 
-def test_list_deliveries():
-    # create one first
+def test_list_deliveries(client):
     client.post(
         "/deliveries",
         json={"driver_name": "List Test", "status": "created"},
@@ -33,10 +25,10 @@ def test_list_deliveries():
 
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+    assert len(response.json()) >= 1
 
 
-def test_update_delivery():
-    # create delivery
+def test_update_delivery(client):
     create_res = client.post(
         "/deliveries",
         json={"driver_name": "Update Me", "status": "created"},
@@ -44,7 +36,6 @@ def test_update_delivery():
 
     delivery_id = create_res.json()["id"]
 
-    # update it
     update_res = client.put(
         f"/deliveries/{delivery_id}",
         json={"driver_name": "Updated", "status": "delivered"},
