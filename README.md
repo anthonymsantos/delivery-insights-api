@@ -79,3 +79,8 @@ This repo is part of a structured learning sprint focused on:
 - Cloud-native system design on AWS
 
 - Practical AI service integration
+
+## 🤝 Development Notes
+
+This project is being developed with the assistance of AI tools to support learning, problem-solving, and architectural guidance.
+All implementation, debugging, and design decisions are actively reviewed and understood as part of the development process.
