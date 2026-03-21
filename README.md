@@ -23,15 +23,25 @@ This project is being developed as a foundation for a cloud-native, AI-integrate
 
 - (Planned) AI: AWS Bedrock / Comprehend
 
-### 📦 Current Features (v1)
-
-- Basic FastAPI app
-
-- Health endpoint (GET /)
+### 📦 Current Features (v1.2)
 
 - Local development setup with virtual environment
 
-- More endpoints (CRUD for deliveries), database integration, and AWS deployment are coming next.
+- FastAPI backend
+
+- SQLite persistence
+
+- Dependency injection
+
+- CRUD + update
+
+- Pagination + filtering + sorting
+
+- Structured responses
+
+- Isolated test suite
+
+- Databse integration and AWS deployment coming next 
 
 ### 🛠 Local Setup
 git clone git@github.com:anthonymsantos/delivery-insights-api.git
@@ -56,7 +66,7 @@ uvicorn app.main:app --reload
  
 ### 🗺 Roadmap
 
-◼️ CRUD endpoints for deliveries
+✅ CRUD endpoints for deliveries
 
 ◼️ Database integration (SQLite → PostgreSQL/RDS)
 
@@ -80,7 +90,7 @@ This repo is part of a structured learning sprint focused on:
 
 - Practical AI service integration
 
-## 🤝 Development Notes
+## 🤝 Development Acknowledgement
 
 This project is being developed with the assistance of AI tools (Chat GPT 5.2-> 5.4 and Claude Sonnet 4.6) to support learning, problem-solving, and architectural guidance.
 All implementation, debugging, and design decisions are actively reviewed and understood as part of the development process.
