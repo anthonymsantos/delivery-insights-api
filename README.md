@@ -82,5 +82,5 @@ This repo is part of a structured learning sprint focused on:
 
 ## 🤝 Development Notes
 
-This project is being developed with the assistance of AI tools to support learning, problem-solving, and architectural guidance.
+This project is being developed with the assistance of AI tools (Chat GPT 5.2-> 5.4 and Claude Sonnet 4.6) to support learning, problem-solving, and architectural guidance.
 All implementation, debugging, and design decisions are actively reviewed and understood as part of the development process.
