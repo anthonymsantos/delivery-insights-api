@@ -68,9 +68,9 @@ uvicorn app.main:app --reload
 
 ✅ CRUD endpoints for deliveries
 
-◼️ Database integration (SQLite → PostgreSQL/RDS)
+✅ Database integration (SQLite → PostgreSQL/RDS)
 
-◼️ Auth (JWT)
+✅ Auth (JWT)
 
 ◼️ AWS deployment (EC2 + security groups)
 
