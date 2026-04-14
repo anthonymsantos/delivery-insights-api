@@ -3,9 +3,9 @@ services:
     image: postgres:16
     container_name: delivery-postgres
     environment:
-      POSTGRES_DB: delivery_db
-      POSTGRES_USER: delivery_user
-      POSTGRES_PASSWORD: delivery_pass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
@@ -23,7 +23,7 @@ services:
       db:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql+psycopg://delivery_user:delivery_pass@db:5432/delivery_db
+      DATABASE_URL: ${DATABASE_URL}
     ports:
       - "8000:8000"
 
