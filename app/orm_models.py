@@ -10,10 +10,11 @@ class Base(DeclarativeBase):
 class DeliveryORM(Base):
     __tablename__ = "deliveries"
 
-    id: Mapped[str] = mapped_column(String, primary_key=True)
-    driver_name: Mapped[str] = mapped_column(String)
-    status: Mapped[str] = mapped_column(String)
-    timestamp: Mapped[datetime] = mapped_column(DateTime)
+    id: Mapped[str] = mapped_column(String(64), primary_key=True)
+    driver_name: Mapped[str] = mapped_column(String(80), nullable=False)
+    status: Mapped[str] = mapped_column(String(20), nullable=False)
+    timestamp: Mapped[datetime] = mapped_column(DateTime, nullable=False)
+    user_id: Mapped[int] = mapped_column(nullable=False)
 
 class UserORM(Base):
     __tablename__ = "users"

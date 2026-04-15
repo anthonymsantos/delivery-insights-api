@@ -17,12 +17,19 @@ from .orm_models import DeliveryORM
 
 
 class DeliveryRepository:
-    def create(self, db: Session, delivery_id: str, payload: DeliveryCreate) -> Delivery:
+    def create(
+        self,
+        db: Session,
+        delivery_id: str,
+        payload: DeliveryCreate,
+        user_id: int,
+    ) -> Delivery:
         row = DeliveryORM(
             id=delivery_id,
             driver_name=payload.driver_name,
             status=payload.status.value,
             timestamp=payload.timestamp,
+            user_id=user_id,
         )
 
         db.add(row)
@@ -34,6 +41,7 @@ class DeliveryRepository:
             driver_name=row.driver_name,
             status=row.status,
             timestamp=row.timestamp,
+            user_id=row.user_id,
         )
 
     def get(self, db: Session, delivery_id: str) -> Optional[Delivery]:
@@ -46,6 +54,7 @@ class DeliveryRepository:
             driver_name=row.driver_name,
             status=row.status,
             timestamp=row.timestamp,
+            user_id=row.user_id,
         )
 
     def list(
@@ -85,6 +94,7 @@ class DeliveryRepository:
                 driver_name=row.driver_name,
                 status=row.status,
                 timestamp=row.timestamp,
+                user_id=row.user_id,
             )
             for row in rows
         ]
@@ -121,4 +131,5 @@ class DeliveryRepository:
             driver_name=row.driver_name,
             status=row.status,
             timestamp=row.timestamp,
+            user_id=row.user_id,
         )    

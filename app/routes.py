@@ -28,7 +28,7 @@ def create_delivery(
     db: Session = Depends(get_db),
     current_user: UserORM = Depends(get_current_user),
 ) -> Delivery:
-    return repo.create(db, uuid4().hex, payload)
+    return repo.create(db, uuid4().hex, payload, current_user.id)
 
 
 @router.get("", response_model=DeliveryListResponse)
@@ -80,6 +80,13 @@ def delete_delivery(
     db: Session = Depends(get_db),
     current_user: UserORM = Depends(get_current_user),
 ) -> None:
+    existing = repo.get(db, delivery_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Delivery not found")
+
+    if existing.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this delivery")
+
     deleted = repo.delete(db, delivery_id)
 
     if not deleted:
@@ -94,6 +101,13 @@ def update_delivery(
     db: Session = Depends(get_db),
     current_user: UserORM = Depends(get_current_user),
 ) -> Delivery:
+    existing = repo.get(db, delivery_id)
+    if not existing:
+        raise HTTPException(status_code=404, detail="Delivery not found")
+
+    if existing.user_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this delivery")
+
     updated = repo.update(db, delivery_id, payload)
 
     if not updated:
