@@ -1,7 +1,8 @@
 import os
 from datetime import UTC, datetime, timedelta
 
-from jose import jwt
+from fastapi import HTTPException, status
+from jose import JWTError, jwt
 from passlib.context import CryptContext
 
 pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
@@ -26,3 +27,13 @@ def create_access_token(subject: str) -> str:
         "exp": expire,
     }
     return jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+
+
+def decode_access_token(token: str) -> dict:
+    try:
+        return jwt.decode(token, JWT_SECRET_KEY, algorithms=[JWT_ALGORITHM])
+    except JWTError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+        ) from exc

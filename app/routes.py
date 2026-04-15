@@ -3,6 +3,9 @@ from uuid import uuid4
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
+from .auth_routes import get_current_user
+from .orm_models import UserORM
+
 from .db import get_db
 from .models import (
     Delivery,
@@ -23,6 +26,7 @@ repo = DeliveryRepository()
 def create_delivery(
     payload: DeliveryCreate,
     db: Session = Depends(get_db),
+    current_user: UserORM = Depends(get_current_user),
 ) -> Delivery:
     return repo.create(db, uuid4().hex, payload)
 
@@ -74,6 +78,7 @@ def get_delivery(
 def delete_delivery(
     delivery_id: str,
     db: Session = Depends(get_db),
+    current_user: UserORM = Depends(get_current_user),
 ) -> None:
     deleted = repo.delete(db, delivery_id)
 
@@ -87,6 +92,7 @@ def update_delivery(
     delivery_id: str,
     payload: DeliveryUpdate,
     db: Session = Depends(get_db),
+    current_user: UserORM = Depends(get_current_user),
 ) -> Delivery:
     updated = repo.update(db, delivery_id, payload)
 
